@@ -10,5 +10,5 @@ Cmlst = data[:,7]
 
 aero_lst = (Cllst,Cdlst,Cmlst)
 
-f_Cllst = sp.interpolate.interp1d(ylst,function,kind='cubic',fill_value='extrapolate')
+f_Cllst = sp.interpolate.interp1d(ylst,Cllst,kind='cubic',fill_value='extrapolate')
 
