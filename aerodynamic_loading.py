@@ -1,4 +1,3 @@
-
 import numpy as np
 import scipy as sp
 from scipy import interpolate
@@ -21,15 +20,21 @@ f_chord = sp.interpolate.interp1d(ylst,chordlst,kind='cubic',fill_value='extrapo
 Cl_f = sp.interpolate.interp1d(ylst,Cllst,kind='cubic',fill_value='extrapolate')
 Cd_f = sp.interpolate.interp1d(ylst,Cdlst,kind='cubic',fill_value='extrapolate')
 Cm_f = sp.interpolate.interp1d(ylst,Cmlst,kind='cubic',fill_value='extrapolate')
+functions = [Cl_f,Cd_f,Cm_f]
 
 # ALL FUNCTIONS ARE PER UNIT SPAN
 
 def localload(y):
-    L = f_chord(y) * q * Cl_f(y)
-    D = f_chord(y) * q * Cd_f(y)
-    M = f_chord(y) * q * Cm_f(y)
-    return L,D,M
+    loading = []
+    for function in functions:
+        load = float(function(y)* q * f_chord(y))
+        loading.append(load)
+    return loading
     
+    
+
+
+
     
 
 
