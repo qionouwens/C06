@@ -46,16 +46,6 @@ total_cm_10 = -1.73102
 total_0 = [total_cl_0, total_cd_0, total_cm_0]
 total_10 = [total_cl_10, total_cd_10, total_cm_10]
 
-
-# ALL FUNCTIONS ARE PER UNIT SPAN
-def local_load(y, functions):
-    loading = []
-    for function in functions:
-        load = float(function(y) * q * f_chord(y))
-        loading.append(load)
-    return loading
-
-
 def cl_distribution(desired_cl, y):
     cl_0 = functions_0[0]
     cl_10 = functions_10[0]
@@ -80,7 +70,16 @@ def moment_distribution(aoa, y):
     return cm_0(y) + interpolation * (cm_10(y) - cm_0(y))
 
 
+# ALL FUNCTIONS ARE PER UNIT SPAN
+def force_distribution(y, desired_cl, aoa):
+    chord_q = f_chord(y) * q
+    L = float(cl_distribution(desired_cl,y) * chord_q)
+    D = float(drag_distribution(aoa,y) * chord_q)
+    M = float(moment_distribution(aoa,y) * chord_q)
+    
+    loading = [L,D,M]
 
+    return loading
     
 
 
