@@ -8,7 +8,7 @@ data_10 = np.genfromtxt("MainWing_a=10.00_v=10.00ms.txt", skip_header=40, skip_f
 
 ylst = data_0[:, 0]
 chordlst = data_0[:, 1]
-f_chord = sp.interpolate.interp1d(ylst, chordlst, kind='cubic', fill_value='extrapolate')
+f_chord = sp.interpolate.interp1d(ylst, chordlst, kind='linear', fill_value='extrapolate')
 
 V = 10  # m/s
 rho = 1.225  # kg/m^3
