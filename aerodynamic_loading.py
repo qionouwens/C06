@@ -16,7 +16,7 @@ S = 392.3 # m^2
 
 q = 1/2 * rho * V**2 * S
 
-f_chord = sp.interpolate.interp1d(ylst,chordlst,kind='cubic',fill_value='extrapolate')
+f_chord = sp.interpolate.interp1d(ylst,chordlst,kind='linear',fill_value='extrapolate')
 Cl_f = sp.interpolate.interp1d(ylst,Cllst,kind='cubic',fill_value='extrapolate')
 Cd_f = sp.interpolate.interp1d(ylst,Cdlst,kind='cubic',fill_value='extrapolate')
 Cm_f = sp.interpolate.interp1d(ylst,Cmlst,kind='cubic',fill_value='extrapolate')
