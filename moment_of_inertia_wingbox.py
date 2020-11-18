@@ -24,7 +24,7 @@ def I_x(y,n_stringers_upper,n_stringers_lower):
         steiner = stringer_area*z**2
         I_induced = np.sum(steiner)
         
-    return (A+B+C+D)*f_chord(y)**3 #+I_induced
+    return (A+B+C+D)*f_chord(y)**3 +I_induced
 
 E = (b*t)*(spar_location[1]-x_bar)**2
 F = (b*t)*(spar_location[0]-x_bar)**2
