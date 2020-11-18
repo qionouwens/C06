@@ -10,7 +10,7 @@ ylst = data_0[:, 0]
 chordlst = data_0[:, 1]
 f_chord = sp.interpolate.interp1d(ylst, chordlst, kind='linear', fill_value='extrapolate')
 
-V = 10  # m/s
+V = 10 # m/s
 rho = 1.225  # kg/m^3
 S = 392.3  # m^2
 
@@ -46,6 +46,7 @@ total_cm_10 = -1.73102
 total_0 = [total_cl_0, total_cd_0, total_cm_0]
 total_10 = [total_cl_10, total_cd_10, total_cm_10]
 
+
 def cl_distribution(desired_cl, y):
     cl_0 = functions_0[0]
     cl_10 = functions_10[0]
@@ -71,8 +72,7 @@ def moment_distribution(aoa, y):
 
 
 # ALL FUNCTIONS ARE PER UNIT SPAN
-def force_distribution(y, desired_cl):
-    aoa = angle_of_attack(desired_cl)
+def force_distribution(y, desired_cl, aoa):
     chord_q = f_chord(y) * q
     L = float(cl_distribution(desired_cl,y) * chord_q)
     D = float(drag_distribution(aoa,y) * chord_q)
@@ -81,6 +81,5 @@ def force_distribution(y, desired_cl):
     loading = [L,D,M]
 
     return loading
-    
 
 
