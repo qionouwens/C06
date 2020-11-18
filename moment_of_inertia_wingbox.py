@@ -13,12 +13,10 @@ D = (t * lng_lower**3 * (sin(beta_lower)**2)) / 12 + (lng_lower)*t * (lower(0.45
 
 
 ## stringer placement upper skin##
-stringer_area = t**2 * 20
-n_upper = 5
-n_lower = 3
-skins = [[upper,n_upper],[lower,n_lower]]
+stringer_area = (2*t)**2 * 20
 
-def I_x(y):
+def I_x(y,n_stringers_upper,n_stringers_lower):
+    skins = [[upper,n_stringers_upper],[lower,n_stringers_lower]]
     for n in skins:
         x = np.linspace(x_values[0],x_values[1],n[1])
         z = (n[0](x)-y_bar)*float(f_chord(y))
