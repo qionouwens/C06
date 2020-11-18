@@ -53,6 +53,21 @@ y_bar = (sum_Q + b * t * 0 + a * t * a/2)/(count*dA + (b+a)*t)
 
 x_bar = 0.2 + ((lng_upper + lng_lower)*t * 0.25 + 0.5 * a * t) / ((b+a+lng_lower+lng_upper)*t)
 
+### moment of inertia computations ###
+A = 1/12 * t * b**3 + (b*t)*((y_2[0] - b/2)-y_bar)**2 
+B = 1/12 * t * a**3 + (a*t)*((y_2[1] - a/2)-y_bar)**2
+C = (t * lng_upper**3 * (sin(beta_upper)**2)) / 12 + (lng_upper)*t * (upper(0.45)-y_bar)**2
+D = (t * lng_lower**3 * (sin(beta_lower)**2)) / 12 + (lng_lower)*t * (lower(0.45)-y_bar)**2
+
+I_xx = A+B+C+D
+
+E = (b*t)*(spar_location[1]-x_bar)**2
+F = (b*t)*(spar_location[0]-x_bar)**2
+G = (t * lng_upper**3 * (cos(beta_upper)**2)) / 12 + (lng_upper)*t * ((spar_location[1]-spar_location[0])-x_bar)**2
+H = (t * lng_lower**3 * (cos(beta_lower)**2)) / 12 + (lng_lower)*t * ((spar_location[1]-spar_location[0])-x_bar)**2
+
+I_yy = E+F+G+H
+
 plt.plot(x,y)
 plt.vlines(0.2,-0.0633,0.0633,color='r')
 plt.vlines(0.7,-0.0304,0.053700,color='r')
