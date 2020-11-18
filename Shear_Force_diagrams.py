@@ -11,49 +11,36 @@ aoa = angle_of_attack(desired_cl)
 
 
 def normal_force(y):
+    Sin =-767926.5287+34501.01*y-318.645*y**2
+    Sin2 = -15320*(y-9.44)
+    if 9.44 <= y <= 12.49:
+        Sadd = Sin +Sin2
+    else:
+        Sadd = Sin
     lift, drag, moment = force_distribution(y, desired_cl)
-    return lift*cos(radians(aoa))+sin(radians(aoa))*drag
+    return lift*cos(radians(aoa))+sin(radians(aoa))*drag+Sadd
 
 
 def shear_force(y):
     return scipy.integrate.quad(normal_force, y, half_span)[0]
 
 
+def moment(y):
+    return scipy.integrate.quad(shear_force, y, half_span)[0]
+
+
 y_values = np.linspace(0, half_span, 200)
 shear = []
+moment_list = []
 for y_value in y_values:
     shear.append(shear_force(y_value))
+    moment_list.append(moment(y_value))
 
 fig, ax = plt.subplots()
 ax.plot(y_values, shear)
 plt.show()
 
-sin1 = []
-for y_value in y_values:
-    Sin =-767926.5287+34501.01*y_value-318.645*y_value**2
-    Sin2 = -15320*(y_value-9.44)
-    if 9.44 <= y_value <= 12.49:
-        Sadd = Sin +Sin2
-    else:
-        Sadd = Sin
-    sin1.append(Sadd)
-
-fig, ax = plt.subplots()
-ax.plot(y_values, sin1)
-plt.show()
-
-Sheartotal = np.array(sin1)+ np.array(shear)
-
-fig, ax = plt.subplots()
-ax.plot(y_values, Sheartotal)
-plt.show()
-
-Mbend = []
-for y_value in y_values:
-    Mindex = np.where(y_values ==y_value)
-    M=y_value*Sheartotal[Mindex]
-    Mbend.append(M)
-
 fig, ax = plt.subplots()
 ax.plot(y_values, Mbend)
 plt.show()
+
