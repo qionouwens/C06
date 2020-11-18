@@ -27,3 +27,33 @@ for y_value in y_values:
 fig, ax = plt.subplots()
 ax.plot(y_values, shear)
 plt.show()
+
+sin1 = []
+for y_value in y_values:
+    Sin =-767926.5287+34501.01*y_value-318.645*y_value**2
+    Sin2 = -15320*(y_value-9.44)
+    if 9.44 <= y_value <= 12.49:
+        Sadd = Sin +Sin2
+    else:
+        Sadd = Sin
+    sin1.append(Sadd)
+
+fig, ax = plt.subplots()
+ax.plot(y_values, sin1)
+plt.show()
+
+Sheartotal = np.array(sin1)+ np.array(shear)
+
+fig, ax = plt.subplots()
+ax.plot(y_values, Sheartotal)
+plt.show()
+
+Mbend = []
+for y_value in y_values:
+    Mindex = np.where(y_values ==y_value)
+    M=y_value*Sheartotal[Mindex]
+    Mbend.append(M)
+
+fig, ax = plt.subplots()
+ax.plot(y_values, Mbend)
+plt.show()
