@@ -2,6 +2,7 @@ from aerodynamic_loading import force_distribution, angle_of_attack
 from math import cos, sin, radians
 import numpy as np
 import scipy
+import thread
 from scipy import integrate
 import matplotlib.pyplot as plt
 
