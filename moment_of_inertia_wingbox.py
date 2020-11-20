@@ -18,21 +18,17 @@ D = (t_skin * lng_lower**3 * (sin(beta_lower)**2)) / 12 + (lng_lower)*t_skin * (
 stringer_area = (2*t_skin)**2 * height_stringer
 
 def I_x(y,n_stringers_upper,n_stringers_lower):
+    z_str = []
+    x_str = []
     skins = [[upper,n_stringers_upper],[lower,n_stringers_lower]]
     for n in skins:
         x = np.linspace(x_values[0],x_values[1],n[1])
-        z = (n[0](x)-y_bar)*float(f_chord(y))
-
+        z = (n[0](x)-y_bar)
+        x_str.append(x)
+        z_str.append(z)
         steiner = stringer_area*z**2
         I_induced = np.sum(steiner)
         
-    return (A+B+C+D)*f_chord(y)**3 +I_induced
-
-# E = (b*t)*(spar_location[1]-x_bar)**2
-# F = (b*t)*(spar_location[0]-x_bar)**2
-# G = (t * lng_upper**3 * (cos(beta_upper)**2)) / 12 + (lng_upper)*t * ((spar_location[1]-spar_location[0])-x_bar)**2
-# H = (t * lng_lower**3 * (cos(beta_lower)**2)) / 12 + (lng_lower)*t * ((spar_location[1]-spar_location[0])-x_bar)**2
-
-# I_yy = (E+F+G+H)
+    return (A+B+C+D)*f_chord(y)**3 +I_induced*float(f_chord(y))**2, x_str, z_str
 
 
