@@ -14,7 +14,7 @@ V = 10 # m/s
 rho = 1.225  # kg/m^3
 S = 392.3  # m^2
 
-q = 1 / 2 * rho * V ** 2 * S
+q = 1 / 2 * rho * V ** 2
 
 
 def process_data(data):
