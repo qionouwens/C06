@@ -9,7 +9,8 @@ x = data[:,0]
 y = data[:,1]
 
 spar_location = [0.2,0.7]
-t = 0.001
+t_skin = 0.001
+t_spar = 0.001
 
 x_values = spar_location
 y_1 = [-0.0633,-0.0304]
@@ -32,7 +33,7 @@ beta_upper = atan((y_2[0]-y_2[1])/0.5)
 beta_lower = atan((-y_1[0]+y_1[1])/0.5)
 
 
-dx = t
+dx = t_skin
 dA = dx**2
 
 
@@ -54,25 +55,26 @@ while go:
 
     go = False
     
-y_bar = (sum_Q + b * t * 0 + a * t * a/2)/(count*dA + (b+a)*t)
+y_bar = (sum_Q + b * t_spar * 0 + a * t_spar * a/2)/((b+a)*t_spar+(lng_lower+lng_upper)*t_skin)
 
-x_bar = 0.2 + ((lng_upper + lng_lower)*t * 0.25 + 0.5 * a * t) / ((b+a+lng_lower+lng_upper)*t)
+x_bar = 0.2 + ((lng_upper + lng_lower)*t_skin * 0.25 + 0.5 * a * t_skin) / ((b+a)*t_spar+(lng_lower+lng_upper)*t_skin)
 
 
+I_polar = 4 * ((a+b)/2 * h)**2 / ((a+b)/t_spar+(lng_upper+lng_lower)/t_skin)
 
-I_polar = 4 * ((a+b)/2 * h)**2 / ((a+b+lng_upper+lng_lower)/t)
+# Uncomment to plot the cross section of the wing box ##
 
-## Uncomment to plot the cross section of the wing box ##
-
-##plt.plot(x,y)
-##plt.vlines(0.2,-0.0633,0.0633,color='r')
-##plt.vlines(0.7,-0.0304,0.053700,color='r')
-##plt.hlines(y_bar,0,1)
-##plt.vlines(x_bar,lower(x_bar),upper(x_bar))
-##plt.plot(x_values,y_1,color='r')
-##plt.plot(x_values,y_2,color='r')
-##plt.plot(x_bar,y_bar,'rp',markersize=6)
-###plt.show()
+#plt.plot(x,y)
+#plt.vlines(0.2,-0.0633,0.0633,color='r')
+#plt.vlines(0.7,-0.0304,0.053700,color='r')
+#plt.hlines(y_bar,0,1)
+#plt.vlines(x_bar,lower(x_bar),upper(x_bar))
+#plt.plot(x_values,y_1,color='r')
+#plt.plot(x_values,y_2,color='r')
+#plt.plot(x_bar,y_bar,'rp',markersize=6)
+#plt.xlabel('x/c')
+#plt.ylabel('y/c')
+#plt.show()
 
 
 
