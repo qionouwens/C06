@@ -72,7 +72,8 @@ def moment_distribution(aoa, y):
 
 
 # ALL FUNCTIONS ARE PER UNIT SPAN
-def force_distribution(y, desired_cl, aoa):
+def force_distribution(y, desired_cl):
+    aoa = angle_of_attack(desired_cl)
     chord_q = f_chord(y) * q
     L = float(cl_distribution(desired_cl,y) * chord_q)
     D = float(drag_distribution(aoa,y) * chord_q)
