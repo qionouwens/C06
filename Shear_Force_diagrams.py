@@ -11,7 +11,7 @@ aoa = angle_of_attack(desired_cl)
 
 
 def normal_force(y):
-    lift, drag, _ = force_distribution(y, desired_cl)
+    lift, drag, _ = force_distribution(y, desired_cl, aoa)
     return lift*cos(radians(aoa))+sin(radians(aoa))*drag
 
 
@@ -34,7 +34,7 @@ previous_shear = shear_force(0)
 previous_y_value = 0
 for y_value in y_values:
     shear.append(shear_force(y_value))
-moment_list = scipy.integrate.cumtrapz(shear, initial=moment(0))
+moment_list = scipy.integrate.cumtrapz(shear, y_values, initial=0)
 moment_list = max(moment_list) - moment_list
 
 plt.figure()
@@ -44,4 +44,6 @@ plt.plot(y_values, shear)
 plt.subplot(212)
 plt.plot(y_values, moment_list)
 plt.show()
+
+
 
