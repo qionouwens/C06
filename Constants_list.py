@@ -3,3 +3,6 @@ density = 1.225  # kg/m^3
 young_modulus = 68.9 * 10 ** 9  # Pa
 upper_stringers = 5
 lower_stringers = 3
+t_skin = 0.001
+t_spar = 0.001
+spar_loc = [0.2,0.7]
