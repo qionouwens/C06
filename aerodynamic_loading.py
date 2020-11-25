@@ -2,6 +2,7 @@ import numpy as np
 import scipy as sp
 from scipy import interpolate
 from math import asin, sin, radians, degrees
+from Constants_list import velocity, density
 
 data_0 = np.genfromtxt("MainWing_a=0.00_v=10.00ms.txt", skip_header=40, skip_footer=1030)
 data_10 = np.genfromtxt("MainWing_a=10.00_v=10.00ms.txt", skip_header=40, skip_footer=1030)
@@ -10,8 +11,8 @@ ylst = data_0[:, 0]
 chordlst = data_0[:, 1]
 f_chord = sp.interpolate.interp1d(ylst, chordlst, kind='linear', fill_value='extrapolate')
 
-V = 10 # m/s
-rho = 1.225  # kg/m^3
+V = velocity # m/s
+rho = density  # kg/m^3
 S = 392.3  # m^2
 
 q = 1 / 2 * rho * V ** 2
@@ -72,8 +73,7 @@ def moment_distribution(aoa, y):
 
 
 # ALL FUNCTIONS ARE PER UNIT SPAN
-def force_distribution(y, desired_cl):
-    aoa = angle_of_attack(desired_cl)
+def force_distribution(y, desired_cl, aoa):
     chord_q = f_chord(y) * q
     L = float(cl_distribution(desired_cl,y) * chord_q)
     D = float(drag_distribution(aoa,y) * chord_q)
