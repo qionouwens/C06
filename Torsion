@@ -1,0 +1,191 @@
+from scipy import interpolate
+from math import asin, sin, radians, degrees, cos
+from math import cos, sin, radians
+import numpy as np
+import scipy
+from scipy import integrate
+import matplotlib.pyplot as plt
+
+data_0 = np.genfromtxt("MainWing_a=0.00_v=10.00ms.txt", skip_header=40, skip_footer=1030)
+data_10 = np.genfromtxt("MainWing_a=10.00_v=10.00ms.txt", skip_header=40, skip_footer=1030)
+
+ylst = data_0[:, 0]
+chordlst = data_0[:, 1]
+f_chord = scipy.interpolate.interp1d(ylst, chordlst, kind='linear', fill_value='extrapolate')
+
+V = 100  # m/s
+rho = 1.225  # kg/m^3
+S = 392.3  # m^2
+
+q = 1 / 2 * rho * V ** 2
+
+
+def process_data(data):
+    Cllst = data[:, 3]
+    Cdlst = data[:, 5]
+    Cmlst = data[:, 7]
+
+    Cl_f = scipy.interpolate.interp1d(ylst, Cllst, kind='cubic', fill_value='extrapolate')
+    Cd_f = scipy.interpolate.interp1d(ylst, Cdlst, kind='cubic', fill_value='extrapolate')
+    Cm_f = scipy.interpolate.interp1d(ylst, Cmlst, kind='cubic', fill_value='extrapolate')
+    functions = [Cl_f, Cd_f, Cm_f]
+
+    return functions
+
+
+functions_0 = process_data(data_0)
+functions_10 = process_data(data_10)
+
+total_cl_0 = 0.508651
+total_cl_10 = 1.345901
+
+total_cd_0 = 0.008158
+total_cd_10 = 0.055607
+
+total_cm_0 = -0.702886
+total_cm_10 = -1.73102
+
+total_0 = [total_cl_0, total_cd_0, total_cm_0]
+total_10 = [total_cl_10, total_cd_10, total_cm_10]
+
+
+def cl_distribution(desired_cl, y):
+    cl_0 = functions_0[0]
+    cl_10 = functions_10[0]
+    return cl_0(y) + ((desired_cl - total_cl_0) / (total_cl_10 - total_cl_0)) * (cl_10(y) - cl_0(y))
+
+
+def angle_of_attack(desired_cl):
+    return degrees(asin((desired_cl - total_cl_0) / (total_cl_10 - total_cl_0) * sin(radians(10))))
+
+
+def drag_distribution(aoa, y):
+    interpolation = sin(radians(aoa)) / sin(radians(10))
+    cd_0 = functions_0[1]
+    cd_10 = functions_10[1]
+    return cd_0(y) + interpolation * (cd_10(y) - cd_0(y))
+
+
+def moment_distribution(aoa, y):
+    interpolation = sin(radians(aoa)) / sin(radians(10))
+    cm_0 = functions_0[2]
+    cm_10 = functions_10[2]
+    return cm_0(y) + interpolation * (cm_10(y) - cm_0(y))
+
+
+# ALL FUNCTIONS ARE PER UNIT SPAN
+def force_distribution(y, desired_cl):
+    aoa = angle_of_attack(desired_cl)
+    chord_q = f_chord(y) * q
+    L = float(cl_distribution(desired_cl, y) * chord_q)
+    D = float(drag_distribution(aoa, y) * chord_q)
+    M = float(moment_distribution(aoa, y) * chord_q*f_chord(y))
+
+    loading = [L, D, M]
+
+    return loading
+
+half_span = 31.315
+desired_cl = 1.5
+aoa = angle_of_attack(desired_cl)
+
+
+def normal_force(y):
+    lift, drag, moment = force_distribution(y, desired_cl)
+    return lift*cos(radians(aoa))+sin(radians(aoa))*drag
+
+
+def shear_force(y):
+    return scipy.integrate.quad(normal_force, y, half_span)[0]
+
+
+y_values = np.linspace(0, half_span, 2000)
+shear = []
+for y_value in y_values:
+    shear.append(shear_force(y_value))
+
+#fig, ax = plt.subplots()
+#ax.plot(y_values, shear)
+#plt.show()
+
+
+
+
+#TORSION DIAGRAMS
+
+momentc_4 = []
+for y_value in y_values:
+    M = force_distribution(y_value, desired_cl)[2] + 0.1912*force_distribution(y_value, desired_cl)[0]*f_chord(y_value)
+    momentc_4.append(M)
+
+#Convert to a function
+
+def conversion(moment):
+    M_shear_centre_f = scipy.interpolate.interp1d(y_values, moment, kind='cubic', fill_value='extrapolate')
+    return M_shear_centre_f
+
+M_shear_centre_f = conversion(momentc_4)
+
+#Integrate
+Torsion = []
+
+def Torsion_moment(y):
+    Torsion_moment = scipy.integrate.quad(M_shear_centre_f, y, half_span)[0]
+    return Torsion_moment
+#THRUST
+
+Thrust_t = cos(radians(27.87))*440550*1.525
+
+for y_value in y_values:
+    t = Torsion_moment(y_value)
+    if y_value <= 10.965:
+        T = t + Thrust_t
+    else:
+        T = t
+    Torsion.append(T)
+
+Cm_4 = []
+for y_value in y_values:
+    Cm_41 = force_distribution(y_value, desired_cl)[2]
+    Cm_4.append(Cm_41)
+
+#CONTRIBUTION OF INERTIAL FORCES
+m_fuel = 59242.52
+
+def inertial_f(m_fuel, y):
+    func = 6178.26 - 14.22*y + (0.478 - 0.011*y)*m_fuel
+    return func
+
+W_en = 71259.84 #N
+
+T_inertial = []
+
+for y_value in y_values:
+    T_section = inertial_f(m_fuel, y_value)*f_chord(y_value)*0.0588 #positive
+    T_en = 71259.84*f_chord(10.965)*0.6412 #negative
+    if y_value <= 10.965:
+        T_in = T_section - T_en
+    else:
+        T_in = T_section
+    T_inertial.append(T_in)
+
+#ADD INERTIAL AND AERODYNAMIC
+T_total = np.array(T_inertial) + np.array(Torsion)
+
+fig=plt.figure()
+fig.suptitle('Graphs')
+plt.subplot(2,2,1)
+plt.plot(y_values, T_inertial)
+plt.title('Inertial Torsion')
+plt.subplot(2,2,2)
+plt.plot(y_values, momentc_4, 'tab:orange')
+plt.title('Moment about shear centre')
+plt.subplot(2,2,3)
+plt.plot(y_values, T_total, 'tab:green')
+plt.title('T total')
+plt.subplot(2,2,4)
+plt.plot(y_values, Torsion, 'tab:red')
+plt.title('Torsion without inertial forces')
+
+
+plt.show()
