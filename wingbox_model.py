@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from math import sqrt, sin, atan, cos
 import scipy as sp
 from scipy import interpolate
-from Constants_list import t_skin, t_spar, spar_location
+from Constants_list import t_skin, t_spar, spar_location, x_mid_spar
 
 data = np.genfromtxt('sc20714.txt',skip_header=1)
 x = data[:,0]
