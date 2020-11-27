@@ -4,9 +4,8 @@ import numpy as np
 import scipy
 from scipy import integrate
 import matplotlib.pyplot as plt
+from Constants_list import half_span, desired_cl
 
-half_span = 31.315
-desired_cl = 1.5
 aoa = angle_of_attack(desired_cl)
 
 
@@ -44,6 +43,4 @@ plt.plot(y_values, shear)
 plt.subplot(212)
 plt.plot(y_values, moment_list)
 plt.show()
-
-
 

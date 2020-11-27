@@ -3,15 +3,11 @@ import matplotlib.pyplot as plt
 from math import sqrt, sin, atan, cos
 import scipy as sp
 from scipy import interpolate
-from Constants_list import t_skin as t_sk, t_spar as t_sp, spar_loc
+from Constants_list import t_skin, t_spar, spar_location
 
 data = np.genfromtxt('sc20714.txt',skip_header=1)
 x = data[:,0]
 y = data[:,1]
-
-spar_location = spar_loc
-t_skin = t_sk
-t_spar = t_sp
 
 x_values = spar_location
 y_1 = [-0.0633,-0.0304]
@@ -64,18 +60,18 @@ x_bar = 0.2 + ((lng_upper + lng_lower)*t_skin * 0.25 + 0.5 * a * t_skin) / ((b+a
 I_polar = 4 * ((a+b)/2 * h)**2 / ((a+b)/t_spar+(lng_upper+lng_lower)/t_skin)
 
 # Uncomment to plot the cross section of the wing box ##
-def plot():
-    plt.plot(x,y)
-    plt.vlines(0.2,-0.0633,0.0633,color='r')
-    plt.vlines(0.7,-0.0304,0.053700,color='r')
+
+#plt.plot(x,y)
+#plt.vlines(0.2,-0.0633,0.0633,color='r')
+#plt.vlines(0.7,-0.0304,0.053700,color='r')
 #plt.hlines(y_bar,0,1)
-    plt.vlines(x_bar,lower(x_bar),upper(x_bar))
-    plt.plot(x_values,y_1,color='r')
-    plt.plot(x_values,y_2,color='r')
-    plt.plot(x_bar,y_bar,'rp',markersize=6)
-    plt.xlabel('x/c')
-    plt.ylabel('y/c')
-    plt.show()
+#plt.vlines(x_bar,lower(x_bar),upper(x_bar))
+#plt.plot(x_values,y_1,color='r')
+#plt.plot(x_values,y_2,color='r')
+#plt.plot(x_bar,y_bar,'rp',markersize=6)
+#plt.xlabel('x/c')
+#plt.ylabel('y/c')
+#plt.show()
 
 
 
