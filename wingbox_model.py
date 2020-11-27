@@ -64,18 +64,18 @@ x_bar = 0.2 + ((lng_upper + lng_lower)*t_skin * 0.25 + 0.5 * a * t_skin) / ((b+a
 I_polar = 4 * ((a+b)/2 * h)**2 / ((a+b)/t_spar+(lng_upper+lng_lower)/t_skin)
 
 # Uncomment to plot the cross section of the wing box ##
-
-#plt.plot(x,y)
-#plt.vlines(0.2,-0.0633,0.0633,color='r')
-#plt.vlines(0.7,-0.0304,0.053700,color='r')
+def plot()
+    plt.plot(x,y)
+    plt.vlines(0.2,-0.0633,0.0633,color='r')
+    plt.vlines(0.7,-0.0304,0.053700,color='r')
 #plt.hlines(y_bar,0,1)
-#plt.vlines(x_bar,lower(x_bar),upper(x_bar))
-#plt.plot(x_values,y_1,color='r')
-#plt.plot(x_values,y_2,color='r')
-#plt.plot(x_bar,y_bar,'rp',markersize=6)
-#plt.xlabel('x/c')
-#plt.ylabel('y/c')
-#plt.show()
+    plt.vlines(x_bar,lower(x_bar),upper(x_bar))
+    plt.plot(x_values,y_1,color='r')
+    plt.plot(x_values,y_2,color='r')
+    plt.plot(x_bar,y_bar,'rp',markersize=6)
+    plt.xlabel('x/c')
+    plt.ylabel('y/c')
+    plt.show()
 
 
 
