@@ -10,3 +10,4 @@ half_span = 31.315  # m
 t_skin = 0.004
 t_spar = 0.005
 spar_location = [0.2, 0.7]
+x_mid_spar = 0.4
