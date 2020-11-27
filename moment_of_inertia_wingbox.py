@@ -12,6 +12,9 @@ C = (t_skin * lng_upper**3 * (sin(beta_upper)**2)) / 12 + (lng_upper)*t_skin * (
 D = (t_skin * lng_lower**3 * (sin(beta_lower)**2)) / 12 + (lng_lower)*t_skin * (lower(0.45)-y_bar)**2
 
 
+### moment of inertia of the mid spar
+E = 1/12 * t_spar *s**3 + (s*t_spar)*(upper(x_mid_spar - s/2)-y_bar)**2
+
 ## stringer placement upper skin##
 stringer_area = (2*t_skin)**2 * height_stringer
 
@@ -26,11 +29,20 @@ def I_x(y,n_stringers_upper,n_stringers_lower):
         
     return (A+B+C+D)*f_chord(y)**3 + I_induced
 
-# E = (b*t)*(spar_location[1]-x_bar)**2
-# F = (b*t)*(spar_location[0]-x_bar)**2
-# G = (t * lng_upper**3 * (cos(beta_upper)**2)) / 12 + (lng_upper)*t * ((spar_location[1]-spar_location[0])-x_bar)**2
-# H = (t * lng_lower**3 * (cos(beta_lower)**2)) / 12 + (lng_lower)*t * ((spar_location[1]-spar_location[0])-x_bar)**2
+def I_x_multicell(y,n_stringers_upper,n_stringers_lower):
+    without_spar = I_x(y,n_stringers_upper,n_stringers_lower)
+    
+    if y <= 5:
+        return without_spar + E*f_chord(y)**3
+    else:
+        return without_spar
 
-# I_yy = (E+F+G+H)
-
+def plot():
+    ys = np.arange(0.0,31.325,0.01)
+    I = []
+    for y in ys:
+        Is = I_x_multicell(y,0,0)
+        I.append(Is)
+    plt.plot(ys,I)
+    plt.show()
 
