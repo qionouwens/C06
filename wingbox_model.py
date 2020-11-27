@@ -3,15 +3,14 @@ import matplotlib.pyplot as plt
 from math import sqrt, sin, atan, cos
 import scipy as sp
 from scipy import interpolate
-from Constants_list import t_skin as t_sk, t_spar as t_sp, spar_loc
 
 data = np.genfromtxt('sc20714.txt',skip_header=1)
 x = data[:,0]
 y = data[:,1]
 
-spar_location = spar_loc
-t_skin = t_sk
-t_spar = t_sp
+spar_location = [0.2,0.7]
+t_skin = 0.004
+t_spar = 0.005
 
 x_values = spar_location
 y_1 = [-0.0633,-0.0304]
