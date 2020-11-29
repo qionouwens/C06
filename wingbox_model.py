@@ -18,8 +18,7 @@ a = (y_2[1]-y_1[1])
 c = y_2[0] - y_2[1]
 h = x_values[1]-x_values[0]
 
-
-# numerical integration
+#interpolation 
 upper = sp.interpolate.interp1d(x_values, y_2, kind='linear',fill_value='extrapolate')
 lower = sp.interpolate.interp1d(x_values, y_1, kind='linear',fill_value='extrapolate')
 
@@ -28,7 +27,7 @@ lng_lower = sqrt((x_values[0]-x_values[1])**2 + (y_1[0]-y_1[1])**2)
 
 lng_mid_spar = upper(x_mid_spar)-lower(x_mid_spar) 
 
-# multicell wing box: cw, starting from left top corner =  d, e, f, g
+# multicell wing box: cw, starting from left upper panel =  d, e, f, g
 d = sqrt((x_values[0]-x_mid_spar)**2 + (upper(x_mid_spar)-y_2[0])**2)
 e = sqrt((x_values[1]-x_mid_spar)**2 + (upper(x_mid_spar)-y_2[1])**2)
 f = sqrt((x_values[1]-x_mid_spar)**2 + (lower(x_mid_spar)-y_1[1])**2)
@@ -37,10 +36,9 @@ g = sqrt((x_values[0]-x_mid_spar)**2 + (lower(x_mid_spar)-y_1[0])**2)
 beta_upper = atan((y_2[0]-y_2[1])/0.5)
 beta_lower = atan((-y_1[0]+y_1[1])/0.5)
 
-
+## centroid determination
 dx = t_skin
 dA = dx**2
-
 
 xs = np.arange(0.2,0.701,dx)
 
@@ -64,19 +62,23 @@ y_bar = (sum_Q + b * t_spar * 0 + a * t_spar * a/2)/((b+a)*t_spar+(lng_lower+lng
 
 x_bar = 0.2 + ((lng_upper + lng_lower)*t_skin * 0.25 + 0.5 * a * t_skin) / ((b+a)*t_spar+(lng_lower+lng_upper)*t_skin)
 
-
+#single cell moment of inertia calculation
 I_polar = 4 * ((a+b)/2 * h)**2 / ((a+b)/t_spar+(lng_upper+lng_lower)/t_skin)
 
-# Uncomment to plot the cross section of the wing box ##
+## Plot the cross section of the wing box ##
 
 def plot():
     plt.plot(x,y)
+    
+    #spars
     plt.vlines(0.2,-0.0633,0.0633,color='r')
     plt.vlines(0.7,-0.0304,0.053700,color='r')
-    #plt.hlines(y_bar,0,1)
-    #plt.vlines(x_bar,lower(x_bar),upper(x_bar))
+    
+    #upper and lower skin
     plt.plot(x_values,y_1,color='r')
     plt.plot(x_values,y_2,color='r')
+    
+    #centroid
     plt.plot(x_bar,y_bar,'rp',markersize=6)
     plt.xlabel('x/c')
     plt.ylabel('y/c')
